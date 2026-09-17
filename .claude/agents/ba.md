@@ -26,4 +26,5 @@ For each request, return:
 - Call out conflicts with existing behavior explicitly - a new rule that contradicts a current one is the single most expensive thing to discover late.
 - Keep it proportionate. A small change gets a short spec; do not pad a two-line fix into a document.
 - Write the spec to a file only when the caller asks for one. Otherwise return it in your report.
-- You do not decide implementation approach - no class names, no framework choices, no schema design. Describe behavior, not construction.
+- You do not decide implementation approach - no class names, no framework choices. Describe behavior, not construction.
+- You do not design database structure or API endpoints - that belongs to the `architect` agent. Describe what the system must do, not its schema or contracts.
