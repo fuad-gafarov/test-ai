@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Todo List</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="app__header">
+        <h1>Todo List</h1>
+        <p id="counts" class="counts" aria-live="polite">0 open &middot; 0 done</p>
+      </header>
+
+      <form id="new-todo-form" class="card form" autocomplete="off">
+        <label class="field">
+          <span>Title</span>
+          <input id="title" name="title" type="text" maxlength="200" required placeholder="What needs doing?" />
+        </label>
+        <label class="field">
+          <span>Description <em>(optional)</em></span>
+          <textarea id="description" name="description" maxlength="2000" rows="2" placeholder="Add details"></textarea>
+        </label>
+        <button class="button" type="submit">Add todo</button>
+      </form>
+
+      <p id="error" class="error" role="alert" hidden></p>
+
+      <ul id="todo-list" class="todo-list"></ul>
+      <p id="empty" class="empty" hidden>Nothing here yet. Add your first todo above.</p>
+    </main>
+
+    <template id="todo-template">
+      <li class="card todo">
+        <div class="todo__main">
+          <input class="todo__toggle" type="checkbox" />
+          <div class="todo__text">
+            <h2 class="todo__title"></h2>
+            <p class="todo__description"></p>
+          </div>
+        </div>
+        <div class="todo__actions">
+          <button class="button button--ghost" type="button" data-action="edit">Edit</button>
+          <button class="button button--danger" type="button" data-action="delete">Delete</button>
+        </div>
+        <form class="todo__edit" hidden>
+          <input class="todo__edit-title" type="text" maxlength="200" required />
+          <textarea class="todo__edit-description" maxlength="2000" rows="2"></textarea>
+          <div class="todo__actions">
+            <button class="button" type="submit">Save</button>
+            <button class="button button--ghost" type="button" data-action="cancel">Cancel</button>
+          </div>
+        </form>
+      </li>
+    </template>
+
+    <script src="script.js"></script>
+  </body>
+</html>
