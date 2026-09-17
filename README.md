@@ -1,145 +1,106 @@
-# 📋 Kanban Task Manager
+# Todo List
 
-A simple, elegant CRUD application for managing tasks on a Kanban board. Create, read, update, and delete tasks while organizing them across three columns: To Do, In Progress, and Done.
+A minimal CRUD todo list: an Express REST API with in-memory storage and a vanilla JavaScript frontend. No database, no build step.
 
-## ✨ Features
+## Features
 
-- **Create Tasks** - Add new tasks with title and description
-- **Read Tasks** - View all tasks organized by status columns
-- **Update Tasks** - Move tasks between columns (To Do → In Progress → Done)
-- **Delete Tasks** - Remove tasks from the board
-- **Responsive Design** - Works seamlessly on desktop and mobile devices
-- **Real-time UI** - Instant updates without page refresh
+- Create todos with a title and optional description
+- List all todos with open/done counts
+- Toggle a todo between `todo` and `done`
+- Edit a todo's title and description inline
+- Delete a todo (with confirmation)
 
-## 🛠️ Tech Stack
+## Tech stack
 
-**Backend:**
-- Node.js
-- Express.js
-- REST API
+- **Backend:** Node.js 20+, Express 4
+- **Frontend:** HTML5, CSS3, vanilla JavaScript (`fetch`)
+- **Tests:** Node's built-in test runner (`node --test`)
+- **Storage:** in-memory (data is lost when the process restarts)
 
-**Frontend:**
-- HTML5
-- CSS3
-- Vanilla JavaScript
+## Getting started
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v12 or higher)
-- npm
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/fuad-gafarov/test-ai.git
-cd test-ai
-```
-
-2. Install dependencies:
 ```bash
 npm install
-```
-
-3. Start the server:
-```bash
 npm start
 ```
 
-4. Open your browser and navigate to:
-```
-http://localhost:3000
+Then open http://localhost:3000. Set `PORT` to use a different port.
+
+Development with auto-restart:
+
+```bash
+npm run dev
 ```
 
-## 📖 API Endpoints
+Run the tests:
 
-### Get all tasks
-```
-GET /api/tasks
-```
-
-### Get task by ID
-```
-GET /api/tasks/:id
+```bash
+npm test
 ```
 
-### Create a new task
-```
-POST /api/tasks
-Body: { "title": "Task title", "description": "Task description", "status": "todo" }
+## Todo model
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | string | UUID, server-generated |
+| `title` | string | Required, trimmed, 1-200 characters |
+| `description` | string | Optional, trimmed, up to 2000 characters, defaults to `""` |
+| `status` | string | `todo` or `done`, defaults to `todo` |
+| `createdAt` | string | ISO 8601 timestamp |
+| `updatedAt` | string | ISO 8601 timestamp |
+
+## API
+
+| Method | Path | Success | Notes |
+| --- | --- | --- | --- |
+| `GET` | `/api/health` | `200` | `{ "status": "ok" }` |
+| `GET` | `/api/todos` | `200` | Array, oldest first |
+| `GET` | `/api/todos/:id` | `200` | `404` if unknown |
+| `POST` | `/api/todos` | `201` | Sets `Location`; `400` on validation errors |
+| `PUT` | `/api/todos/:id` | `200` | Partial update; `400` / `404` |
+| `DELETE` | `/api/todos/:id` | `204` | `404` if unknown |
+
+Errors are returned as `{ "error": "message" }`.
+
+### Examples
+
+```bash
+# Create
+curl -X POST http://localhost:3000/api/todos \
+  -H 'Content-Type: application/json' \
+  -d '{"title":"Buy milk","description":"Semi-skimmed"}'
+
+# Mark done (any subset of title/description/status is accepted)
+curl -X PUT http://localhost:3000/api/todos/<id> \
+  -H 'Content-Type: application/json' \
+  -d '{"status":"done"}'
+
+# Delete
+curl -X DELETE http://localhost:3000/api/todos/<id>
 ```
 
-### Update a task
-```
-PUT /api/tasks/:id
-Body: { "title": "Updated title", "description": "Updated description", "status": "in-progress" }
-```
-
-### Delete a task
-```
-DELETE /api/tasks/:id
-```
-
-## 📝 Task Status
-
-Tasks can have one of three statuses:
-- `todo` - New tasks to be started
-- `in-progress` - Tasks currently being worked on
-- `done` - Completed tasks
-
-## ��� Project Structure
+## Project structure
 
 ```
 test-ai/
 ├── public/
-│   ├── index.html      # Main UI
+│   ├── index.html      # UI markup
 │   ├── style.css       # Styling
 │   └── script.js       # Client-side logic
-├── server.js           # Express server & API
-├── package.json        # Dependencies
-├── .gitignore          # Git ignore rules
-└── README.md           # This file
+├── src/
+│   ├── app.js          # Express app and routes
+│   └── todoStore.js    # In-memory store and validation
+├── test/
+│   └── api.test.js     # API tests
+├── .github/workflows/ci.yml
+├── server.js           # Entrypoint
+└── package.json
 ```
 
-## 🎨 Features in Detail
+## CI
 
-### Adding a Task
-1. Enter a task title and optional description
-2. Click "Add Task"
-3. Task appears in the "To Do" column
+GitHub Actions runs `npm ci`, `npm test`, and a server smoke test on Node 20 and 22 for every push and pull request.
 
-### Moving Tasks
-1. Click the "Move →" button on any task
-2. Task moves to the next column (To Do → In Progress → Done → To Do)
+## License
 
-### Deleting Tasks
-1. Click the "Delete" button on a task
-2. Confirm the deletion
-3. Task is removed from the board
-
-## 🔮 Future Enhancements
-
-- Database persistence (MongoDB/PostgreSQL)
-- User authentication
-- Drag-and-drop task movement
-- Task due dates and priorities
-- Task filtering and search
-- Dark mode
-- Real-time collaboration
-
-## 📄 License
-
-This project is open source and available under the MIT License.
-
-## 👤 Author
-
-Created by [@fuad-gafarov](https://github.com/fuad-gafarov)
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to fork the repository and submit pull requests.
-
----
-
-**Happy task managing! 🎉**
+MIT
