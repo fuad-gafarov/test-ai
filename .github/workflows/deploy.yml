@@ -1,0 +1,61 @@
+name: Deploy Todo app to Fargate
+
+# Manual trigger only, by design (see deploy/README.md "Why manual" section):
+# this is a budget test deployment with no load balancer, so every
+# deployment can change the app's public IP. Auto-deploying on every push
+# would silently move the URL out from under anyone using it. Run this from
+# the Actions tab when you actually want to ship an update.
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "What to deploy"
+        type: choice
+        options:
+          - both
+          - backend-only
+          - frontend-only
+        default: both
+
+permissions:
+  contents: read
+
+concurrency:
+  group: todo-app-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
+
+      - name: Resolve deploy flag
+        id: flag
+        run: |
+          case "${{ inputs.target }}" in
+            backend-only) echo "flag=--backend-only" >> "$GITHUB_OUTPUT" ;;
+            frontend-only) echo "flag=--frontend-only" >> "$GITHUB_OUTPUT" ;;
+            *) echo "flag=" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Build, push, and deploy
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+          CLUSTER_NAME: ${{ vars.CLUSTER_NAME || 'todo-app-cluster' }}
+        run: ./deploy/scripts/02-deploy.sh ${{ steps.flag.outputs.flag }}
+
+      - name: Print app URL
+        if: always()
+        env:
+          AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
+          CLUSTER_NAME: ${{ vars.CLUSTER_NAME || 'todo-app-cluster' }}
+        run: ./deploy/scripts/03-get-url.sh

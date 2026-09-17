@@ -28,6 +28,11 @@
     <p id="empty-state" class="empty-state" hidden>No todos yet. Add one above.</p>
   </main>
 
+  <!-- Generated at container start from the API_BASE env var; see
+       frontend/docker-entrypoint.d/40-generate-config.sh. Safe to 404 in
+       local dev (served with a plain static server) - app.js falls back
+       to its default. -->
+  <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
