@@ -1,0 +1,25 @@
+body {
+  background-color: #f4f1de;
+  color: #3d405b;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+.card {
+  background-color: #e07a5f;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.button {
+  background-color: #81b29a;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #3d405b;
+}
