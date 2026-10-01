@@ -1,0 +1,9 @@
+{
+  "app": "npx tsx bin/todo-app.ts",
+  "watch": { "include": ["**"], "exclude": ["README.md", "cdk*.json", "node_modules", "cdk.out", "**/*.d.ts"] },
+  "context": {
+    "@aws-cdk/aws-ecs:enableImdsBlockingDeprecatedFeature": true,
+    "@aws-cdk/core:checkSecretUsage": true,
+    "@aws-cdk/core:validateSnapshotRemovalPolicy": true
+  }
+}

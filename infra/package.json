@@ -1,0 +1,24 @@
+{
+  "name": "todo-infra",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AWS CDK app: Todo app on ECS Fargate + ALB + EFS",
+  "scripts": {
+    "build": "tsc --noEmit",
+    "synth": "cdk synth --strict",
+    "diff": "cdk diff",
+    "deploy": "cdk deploy --require-approval broadening",
+    "destroy": "cdk destroy"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "^2.272.0",
+    "cdk-nag": "^2.38.2",
+    "constructs": "^10.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "aws-cdk": "^2.1143.0",
+    "tsx": "^4.23.0",
+    "typescript": "~5.9.0"
+  }
+}
