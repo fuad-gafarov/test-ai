@@ -1,0 +1,40 @@
+# Run the Todo app on your local Docker (same Dockerfiles as the AWS Fargate deploy).
+#
+#   docker compose up --build -d     build and start, then open http://localhost:8081
+#   docker compose logs -f           follow logs
+#   docker compose down              stop (todos are kept in the "todo-data" volume)
+#   docker compose down -v           stop and delete the todos
+name: todo
+
+services:
+  api:
+    build: ./backend
+    image: todo-api:local
+    command: ["--todo.data-file=/data/todos.txt"]
+    volumes:
+      - todo-data:/data
+    ports:
+      - "8080:8080"   # optional: direct API access
+    healthcheck:
+      test: ["CMD", "bash", "-c", "exec 3<>/dev/tcp/127.0.0.1/8080 && printf 'GET /actuator/health HTTP/1.0\\r\\n\\r\\n' >&3 && grep -q UP <&3"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+    restart: unless-stopped
+
+  web:
+    build: ./frontend
+    image: todo-web:local
+    environment:
+      API_UPSTREAM: api:8080
+    ports:
+      - "8081:8081"   # the app: http://localhost:8081
+    depends_on:
+      api:
+        condition: service_healthy
+        restart: true
+    restart: unless-stopped
+
+volumes:
+  todo-data:
