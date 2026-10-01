@@ -1,0 +1,63 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CdkReadStacks",
+      "Effect": "Allow",
+      "Action": [
+        "cloudformation:DescribeStacks",
+        "cloudformation:DescribeStackEvents",
+        "cloudformation:GetTemplate",
+        "cloudformation:ListStacks",
+        "sts:GetCallerIdentity"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "CdkBootstrapStack",
+      "Effect": "Allow",
+      "Action": "cloudformation:*",
+      "Resource": "arn:aws:cloudformation:us-east-1:113010540003:stack/CDKToolkit/*"
+    },
+    {
+      "Sid": "CdkBootstrapRoles",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateRole", "iam:DeleteRole", "iam:GetRole", "iam:TagRole", "iam:UntagRole",
+        "iam:UpdateAssumeRolePolicy", "iam:PutRolePolicy", "iam:GetRolePolicy", "iam:DeleteRolePolicy",
+        "iam:AttachRolePolicy", "iam:DetachRolePolicy", "iam:ListRolePolicies", "iam:ListAttachedRolePolicies"
+      ],
+      "Resource": "arn:aws:iam::113010540003:role/cdk-*"
+    },
+    {
+      "Sid": "CdkBootstrapAssetBucket",
+      "Effect": "Allow",
+      "Action": "s3:*",
+      "Resource": ["arn:aws:s3:::cdk-*", "arn:aws:s3:::cdk-*/*"]
+    },
+    {
+      "Sid": "CdkBootstrapImageRepo",
+      "Effect": "Allow",
+      "Action": "ecr:*",
+      "Resource": "arn:aws:ecr:us-east-1:113010540003:repository/cdk-*"
+    },
+    {
+      "Sid": "EcrLogin",
+      "Effect": "Allow",
+      "Action": "ecr:GetAuthorizationToken",
+      "Resource": "*"
+    },
+    {
+      "Sid": "CdkBootstrapVersionParam",
+      "Effect": "Allow",
+      "Action": ["ssm:GetParameter", "ssm:GetParameters", "ssm:PutParameter", "ssm:DeleteParameter", "ssm:AddTagsToResource"],
+      "Resource": "arn:aws:ssm:us-east-1:113010540003:parameter/cdk-bootstrap/*"
+    },
+    {
+      "Sid": "UseCdkDeployRoles",
+      "Effect": "Allow",
+      "Action": "sts:AssumeRole",
+      "Resource": "arn:aws:iam::113010540003:role/cdk-hnb659fds-*"
+    }
+  ]
+}
