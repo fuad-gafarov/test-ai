@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: todo
+  threads:
+    virtual:
+      enabled: true
+server:
+  port: 8080
+todo:
+  data-file: ./data/todos.txt
+  cors-allowed-origin: http://localhost:5173
